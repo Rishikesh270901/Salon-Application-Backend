@@ -11,11 +11,21 @@
         <module name="APIGatewayServer" />
         <module name="User-Service" />
       </profile>
-      <profile name="Annotation profile for NotificationService" enabled="true">
+      <profile name="Annotation profile for ReviewService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="ReviewService" />
+      </profile>
+      <profile name="Annotation profile for ServiceOfferingService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="NotificationService" />
@@ -35,6 +45,7 @@
       <module name="EurekaServer" options="-parameters" />
       <module name="NotificationService" options="-parameters" />
       <module name="PaymentService" options="-parameters" />
+      <module name="ReviewService" options="-parameters" />
       <module name="SalonService" options="-parameters" />
       <module name="ServiceOfferingService" options="-parameters" />
       <module name="User-Service" options="-parameters" />
