@@ -2,7 +2,9 @@ package com.Rishikesh.UserService.service.imp;
 
 import com.Rishikesh.UserService.exception.UserException;
 import com.Rishikesh.UserService.modal.User;
+import com.Rishikesh.UserService.payload.dto.KeycloakUserDTO;
 import com.Rishikesh.UserService.repository.UserRepository;
+import com.Rishikesh.UserService.service.KeycloakService;
 import com.Rishikesh.UserService.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,6 +19,7 @@ public class UserServiceImp implements UserService {
 
 
     private final UserRepository userRepository;
+    private final KeycloakService keycloakService;
 
     @Override
     public User createUser(User user) {
@@ -60,5 +63,13 @@ public class UserServiceImp implements UserService {
         existingUser.setUsername(user.getUsername());
 
         return userRepository.save(existingUser);
+    }
+
+    @Override
+    public User getUserFromJwt(String jwt) throws Exception {
+
+        KeycloakUserDTO keycloakUserDTO = keycloakService.fetchUserprofileByJwt(jwt);
+
+        return userRepository.findByEmail(keycloakUserDTO.getEmail());
     }
 }

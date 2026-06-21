@@ -2,6 +2,7 @@ package com.Rishikesh.BookingService.service;
 
 import com.Rishikesh.BookingService.domain.BookingStatus;
 import com.Rishikesh.BookingService.modal.Booking;
+import com.Rishikesh.BookingService.modal.PaymentOrder;
 import com.Rishikesh.BookingService.modal.SalonReport;
 import com.Rishikesh.BookingService.payload.BookingRequest;
 import com.Rishikesh.BookingService.payload.SalonDTO;
@@ -27,4 +28,6 @@ public interface BookingService {
     List<Booking> getBookingsByDate(LocalDate date, Long salonId);
 
     SalonReport getSalonreport(Long salonId);
+
+    Booking bookingSuccess(PaymentOrder paymentOrder) throws Exception;
 }

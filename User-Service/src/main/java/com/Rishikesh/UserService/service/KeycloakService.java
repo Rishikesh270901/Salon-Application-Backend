@@ -98,10 +98,10 @@ public class KeycloakService {
                                              String grantType, String refreshToken) throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", GRANT_TYPE);
+        requestBody.add("grant_type", grantType);
         requestBody.add("username", username);
         requestBody.add("password", password);
         if (refreshToken != null) {
@@ -119,10 +119,9 @@ public class KeycloakService {
                 TokenResponse.class
         );
 
-        if(response.getStatusCode()==HttpStatus.OK && response.getBody()!=null){
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             return response.getBody();
-        }
-        else{
+        } else {
             throw new Exception("Failed to obtain access token: " + response.getBody());
         }
     }
@@ -133,7 +132,7 @@ public class KeycloakService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer "+token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<Void> requestHttpEntity = new HttpEntity<>(headers);
 
@@ -154,7 +153,7 @@ public class KeycloakService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<String> requestHttpEntity = new HttpEntity<>(headers);
 
@@ -175,6 +174,7 @@ public class KeycloakService {
 
     }
 
+
     public void assignRoleToUser(String userId, String clientId, List<KeycloakRole> roles, String token) throws Exception {
 
         String url = KEYCLOAK_BASE_URL+"/admin/realms/master/users/"+userId+"/role-mappings/clients/"+clientId;
@@ -193,7 +193,31 @@ public class KeycloakService {
                     String.class
             );
         }catch (Exception e){
-           throw new Exception("Failed to assign role" + e.getMessage());
+            throw new Exception("Failed to assign role" + e.getMessage());
+        }
+
+    }
+
+    public KeycloakUserDTO fetchUserprofileByJwt(String token) throws Exception {
+
+        String url = KEYCLOAK_BASE_URL+"/realms/master/protocol/openid-connect/userinfo";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<String> requestHttpEntity = new HttpEntity<>(headers);
+
+        try{
+            ResponseEntity<KeycloakUserDTO> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestHttpEntity,
+                    KeycloakUserDTO.class
+            );
+            return response.getBody();
+        }catch (Exception e){
+            throw new Exception("Failed to get user info" + e.getMessage());
         }
 
     }

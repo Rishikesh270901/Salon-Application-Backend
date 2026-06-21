@@ -2,6 +2,7 @@ package com.Rishikesh.BookingService.service.impl;
 
 import com.Rishikesh.BookingService.domain.BookingStatus;
 import com.Rishikesh.BookingService.modal.Booking;
+import com.Rishikesh.BookingService.modal.PaymentOrder;
 import com.Rishikesh.BookingService.modal.SalonReport;
 import com.Rishikesh.BookingService.payload.BookingRequest;
 import com.Rishikesh.BookingService.payload.SalonDTO;
@@ -156,4 +157,13 @@ public class BookingServiceImpl implements BookingService {
 
         return salonReport;
     }
+
+    @Override
+    public Booking bookingSuccess(PaymentOrder paymentOrder) throws Exception {
+
+        Booking existingBooking = getBookingById(paymentOrder.getBookingId());
+        existingBooking.setStatus(BookingStatus.CONFIRMED);
+        return bookingRepository.save(existingBooking);
+    }
+
 }

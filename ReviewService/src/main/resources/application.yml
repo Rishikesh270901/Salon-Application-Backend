@@ -1,9 +1,9 @@
 server:
-  port: 8085
+  port : 8089
 
 spring:
   application:
-    name: payment-service
+    name: Review-Service
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -13,20 +13,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  rabbitmq:
-    port: 5672
-    host: localhost
-    username: guest
-    password: guest
-
-razorpay:
-  api:
-    key : "your razorpay api key"
-    secret : "your razorpay api secret"
-
-stripe:
-  api:
-    key: "your stripe api key"
 
 eureka:
   instance:

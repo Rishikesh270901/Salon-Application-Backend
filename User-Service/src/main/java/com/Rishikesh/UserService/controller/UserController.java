@@ -50,4 +50,11 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<>("User Deleted", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/api/users/profile")
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception{
+        User user = userService.getUserFromJwt(jwt);
+        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+    }
+
 }

@@ -2,6 +2,8 @@ package com.Rishikesh.PaymentService.service.impl;
 
 import com.Rishikesh.PaymentService.domain.PaymentMethod;
 import com.Rishikesh.PaymentService.domain.PaymentOrderStatus;
+import com.Rishikesh.PaymentService.messaging.BookingEventProducer;
+import com.Rishikesh.PaymentService.messaging.NotificationEventProducer;
 import com.Rishikesh.PaymentService.modal.PaymentOrder;
 import com.Rishikesh.PaymentService.payload.response.PaymentLinkResponse;
 import com.Rishikesh.PaymentService.payload.response.dto.PaymentLinkDTO;
@@ -19,6 +21,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,8 @@ import org.springframework.stereotype.Service;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentOrderRespository paymentOrderRespository;
+    private final BookingEventProducer bookingEventProducer;
+    private final NotificationEventProducer notificationEventProducer;
 
     @Value("${stripe.api.key}")
     private String stripeSecrectKey;
@@ -156,6 +161,11 @@ public class PaymentServiceImpl implements PaymentService {
                 String status = payment.get("status");
                 if(status.equals("captures")){
 //                    Produce Kafka event
+
+                    bookingEventProducer.sentBookingUpdateEvent(paymentOrder);
+                    notificationEventProducer.sentNotification(paymentOrder.getBookingId(), paymentOrder.getUserId(), paymentOrder.getSalonId());
+
+
                     paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
                     paymentOrderRespository.save(paymentOrder);
                     return true;
